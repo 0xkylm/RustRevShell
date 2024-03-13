@@ -26,7 +26,7 @@ fn main() -> std::io::Result<()> {
             }
 
             loop {
-                let mut buffer = [0; 1024];
+                let mut buffer = [0; 8192];
 
                 match client.read(&mut buffer) {
                     Ok(0) => {
@@ -61,9 +61,11 @@ fn main() -> std::io::Result<()> {
 }
 
 fn crypt(buffer: Vec<u8>) -> Vec<u8> {
-    buffer.iter().map(|b| b ^ 42).collect()
+    // buffer.iter().map(|b| b ^ 42).collect()
+    buffer
 }
 
 fn uncrypt(buffer: Vec<u8>) -> Vec<u8> {
-    buffer.iter().map(|b| b ^ 42).collect()
+    //buffer.iter().map(|b| b ^ 42).collect()
+    buffer
 }

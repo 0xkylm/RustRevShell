@@ -13,11 +13,11 @@ fn main() -> io::Result<()> {
     let ip_address = "192.168.1.86:1337";
     let mut stream = TcpStream::connect(&ip_address)?;
     let mut input = String::new();
-    let mut buffer = [0; 1024];
+    let mut buffer = [0; 4096];
     let mut reader = io::stdin();
     let mut stream_clone = stream.try_clone().expect("Failed to clone stream");
     thread::spawn(move || {
-        let mut recv_buffer = [0; 1024];
+        let mut recv_buffer = [0; 8192];
         loop {
             match stream_clone.read(&mut recv_buffer) {
                 Ok(n) if n > 0 => {
@@ -43,16 +43,26 @@ fn main() -> io::Result<()> {
 
 fn input_to_b64(input: String) -> String {
     let mut input = base64::encode(input);
+    input
+}
+
+fn uncrypt(recv_buffer: Vec<u8>) -> Vec<u8> {
+    let decoded_buffer = base64::decode(&recv_buffer).expect("Erreur lors du décodage");
+    decoded_buffer
+}
+
+/*fn input_to_b64(input: String) -> String {
+    let mut input = base64::encode(input);
     let args_vec: Vec<String> = env::args().collect();
     let key = args_vec[1].clone();
     let sc = ShortCrypt::new(&key);
 
     let mut input = sc.encrypt_to_url_component(&input);
-    println!("{}", input);
+    //   println!("{}", input);
     input
-}
+}*/
 
-fn uncrypt(recv_buffer: Vec<u8>) -> Vec<u8> {
+/*fn uncrypt(recv_buffer: Vec<u8>) -> Vec<u8> {
     let args_vec: Vec<String> = env::args().collect();
     let key = args_vec[1].clone();
     let sc = ShortCrypt::new(&key);
@@ -66,26 +76,4 @@ fn uncrypt(recv_buffer: Vec<u8>) -> Vec<u8> {
     let mut decoded_buffer = base64::decode(&decrypted_buffer).expect("Erreur lors du décodage");
     decoded_buffer
 }
-/*
-fn input_to_b64(input: String) -> String {
-    let args_vec: Vec<String> = env::args().collect();
-    let key = args_vec[1].clone();
-    let sc = ShortCrypt::new(&key);
-
-    let encrypted_data = sc.encrypt_to_url_component(&input);
-    let encoded_data = base64::encode(encrypted_data);
-    encoded_data
-}
-
-fn uncrypt(recv_buffer: Vec<u8>) -> Vec<u8> {
-    let args_vec: Vec<String> = env::args().collect();
-    //    let key = args_vec[1].clone();
-    //    let sc = ShortCrypt::new(&key);
-
-    let encrypted_data = base64::decode(recv_buffer).expect("Erreur lors du décodage Base64");
-    //  let decrypted_data = sc
-    //      .decrypt_url_component(&encrypted_data)
-    //      .expect("Erreur lors du déchiffrement");
-    let decrypted_data = encrypted_data;
-    decrypted_data
-}*/
+*/
