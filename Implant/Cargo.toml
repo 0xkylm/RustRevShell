@@ -12,3 +12,4 @@ rand = "0.8.5"
 short-crypt = "1.0.28"
 #winapi = "0.3.9"
 winapi = { version = "0.3.9", features = ["winuser", "winreg", "lmaccess"] }
+tokio = { version = "1", features = ["full"] }
